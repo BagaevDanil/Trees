@@ -37,11 +37,15 @@ private:
 	Node<T>* InsertPrivate(Node<T>* Unit, int Key, T Value); // вставка ключа k в дерево с корнем p
 	void PrintPrivate(Node<T>* Unit);
 
-public:
+	Node<T>* FindMin(Node<T>* p);
+	Node<T>* RemoveMin(Node<T>* p);
+	Node<T>* RemovePrivate(Node<T>* p, int k);
 
+public:
 	TreeAVL(int Key, T Value);
 	TreeAVL();
-	void Insert(int Key, T Value); // вставка ключа k в дерево с корнем p
+	void Insert(int Key, T Value);
+	void Remove(int k);
 	void Print();
 };
 
@@ -58,7 +62,6 @@ inline TreeAVL<T>::TreeAVL()
 {
 	m_head = nullptr;
 }
-
 
 template<class T>
 inline unsigned int TreeAVL<T>::GetHeight(Node<T>* Unit)
@@ -174,3 +177,49 @@ inline void TreeAVL<T>::Print()
 	TreeAVL<T>::PrintPrivate(demo);
 }
 
+template<class T>
+inline TreeAVL<T>::Node<T>* TreeAVL<T>::FindMin(Node<T>* Unit)
+{
+	return (Unit->left) ? (FindMin(Unit->left)) : (Unit);
+}
+
+template<class T>
+inline TreeAVL<T>::Node<T>* TreeAVL<T>::RemoveMin(Node<T>* Unit)
+{
+	if (Unit->left == 0)
+		return Unit->right;
+
+	Unit->left = RemoveMin(Unit->left);
+	return Balance(Unit);
+}
+
+template<class T>
+inline TreeAVL<T>::Node<T>* TreeAVL<T>::RemovePrivate(Node<T>* Unit, int Key)
+{
+	if (!Unit) return 0;
+
+	if (Key < Unit->key)
+		Unit->left = RemovePrivate(Unit->left, Key);
+	else if (Key > Unit->key)
+		Unit->right = RemovePrivate(Unit->right, Key);
+	else
+	{
+		Node<T>* UnitLeftChild = Unit->left;
+		Node<T>* UnitRightChild = Unit->right;
+		delete Unit;
+		if (!UnitRightChild) 
+			return UnitLeftChild;
+
+		Node<T>* minNode = FindMin(UnitRightChild);
+		minNode->right = RemoveMin(UnitRightChild);
+		minNode->left = UnitLeftChild;
+		return Balance(minNode);
+	}
+	return Balance(Unit);
+}
+
+template<class T>
+inline void TreeAVL<T>::Remove(int Key)
+{
+	m_head = RemovePrivate(m_head, Key);
+}
