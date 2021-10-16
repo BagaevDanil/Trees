@@ -115,7 +115,7 @@ void PrintF(node *Unit)
 	if (Unit)
 		cout << Unit->key << ") ";
 	else
-		return;
+		retuhrn;
 
 	if (Unit->left)
 		cout << Unit->left->key << " | ";
