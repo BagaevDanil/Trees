@@ -132,9 +132,9 @@ int main()
 	TreeAVL<int> a(3, 34);
 	a.Insert(5, 453);
 	a.Insert(7, 453);
-	a.Insert(1, 453);
-	a.Insert(4, 453);
-	a.Insert(23, 453);
+	//a.Insert(1, 453);
+	//a.Insert(4, 453);
+	//a.Insert(23, 453);
 	a.Insert(11, 453);
 	a.Insert(29, 453);
 
