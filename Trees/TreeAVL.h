@@ -29,17 +29,18 @@ private:
 
 	Node<T>* m_head;
 	unsigned int GetHeight(Node<T>* Unit);
-	int BalanceFactor(Node<T>* p);
+	int GetBalanceFactor(Node<T>* p);
 	void FixHeight(Node<T>* p);
 	Node<T>* RotateRight(Node<T>* p); // правый поворот вокруг Unit
 	Node<T>* RotateLeft(Node<T>* q); // левый поворот вокруг Unit
 	Node<T>* Balance(Node<T>* p);
-	Node<T>* InsertF(Node<T>* p, int k, T value); // вставка ключа k в дерево с корнем p
-	void PrintF(Node<T>* Unit);
+	Node<T>* InsertPrivate(Node<T>* Unit, int Key, T Value); // вставка ключа k в дерево с корнем p
+	void PrintPrivate(Node<T>* Unit);
 
 public:
 
 	TreeAVL(int Key, T Value);
+	TreeAVL();
 	void Insert(int Key, T Value); // вставка ключа k в дерево с корнем p
 	void Print();
 };
@@ -53,103 +54,123 @@ inline TreeAVL<T>::TreeAVL(int Key, T Value)
 }
 
 template<class T>
+inline TreeAVL<T>::TreeAVL()
+{
+	m_head = nullptr;
+}
+
+
+template<class T>
 inline unsigned int TreeAVL<T>::GetHeight(Node<T>* Unit)
 {
-	return Unit ? (Unit->height) : 0;
+	return (Unit ? (Unit->height) : (0));
 }
 
 template<class T>
-inline int TreeAVL<T>::BalanceFactor(Node<T>* Unit)
+inline int TreeAVL<T>::GetBalanceFactor(Node<T>* Unit)
 {
-	return GetHeight(Unit->right) - GetHeight(Unit->left);
+	return (GetHeight(Unit->right) - GetHeight(Unit->left));
 }
 
 template<class T>
 inline void TreeAVL<T>::FixHeight(Node<T>* Unit)
 {
-	unsigned int unitChildLeft = GetHeight(Unit->left);
-	unsigned int unitChildRight = GetHeight(Unit->right);
-	Unit->height = (unitChildLeft > unitChildRight ? unitChildLeft : unitChildRight) + 1;
+	unsigned int InitChildLeft = GetHeight(Unit->left);
+	unsigned int InitChildRight = GetHeight(Unit->right);
+	Unit->height = ((InitChildLeft > InitChildRight) ? (InitChildLeft) : (InitChildRight)) + 1;
 }
 
 template<class T>
-inline TreeAVL<T>::Node<T>* TreeAVL<T>::RotateRight(Node<T>* p) // правый поворот вокруг p
+inline TreeAVL<T>::Node<T>* TreeAVL<T>::RotateRight(Node<T>* Unit)
 {
-	Node<T>* q = p->left;
-	p->left = q->right;
-	q->right = p;
-	FixHeight(p);
-	FixHeight(q);
-	return q;
+	Node<T> *UnitLeftChild = Unit->left;
+	
+	Unit->left = UnitLeftChild->right;
+	UnitLeftChild->right = Unit;
+	FixHeight(Unit);
+	FixHeight(UnitLeftChild);
+	return(UnitLeftChild);
 }
 
 template<class T>
-inline TreeAVL<T>::Node<T>* TreeAVL<T>::RotateLeft(Node<T>* q) // левый поворот вокруг q
+inline TreeAVL<T>::Node<T>* TreeAVL<T>::RotateLeft(Node<T>* Unit)
 {
-	Node<T>* p = q->right;
-	q->right = p->left;
-	p->left = q;
-	FixHeight(q);
-	FixHeight(p);
-	return p;
+	Node<T> *UnitRightChild = Unit->right;
+
+	Unit->right = UnitRightChild->left;
+	UnitRightChild->left = Unit;
+	FixHeight(Unit);
+	FixHeight(UnitRightChild);
+	return(UnitRightChild);
 }
 
 template<class T>
-inline TreeAVL<T>::Node<T>* TreeAVL<T>::Balance(Node<T>* p) // балансировка узла p
+inline TreeAVL<T>::Node<T>* TreeAVL<T>::Balance(Node<T>* Unit)
 {
-	FixHeight(p);
-	if (BalanceFactor(p) == 2)
+	FixHeight(Unit); //Удалить, после доказательства безполезности (-)
+	int BalanceFactor = GetBalanceFactor(Unit);
+
+	if (BalanceFactor == 2) //RotateLeft
 	{
-		if (BalanceFactor(p->right) < 0)
-			p->right = RotateRight(p->right);
-		return RotateLeft(p);
+		if (GetBalanceFactor(Unit->right) < 0) //BigRotateLeft
+			Unit->right = RotateRight(Unit->right);
+		Unit = RotateLeft(Unit);
 	}
-	if (BalanceFactor(p) == -2)
+	else if (BalanceFactor == -2) //RotateRight
 	{
-		if (BalanceFactor(p->left) > 0)
-			p->left = RotateLeft(p->left);
-		return RotateRight(p);
+		if (GetBalanceFactor(Unit->left) > 0) //BigRotateRight
+			Unit->left = RotateRight(Unit->left);
+		Unit = RotateRight(Unit);
 	}
-	return p; // балансировка не нужна
+	return Unit;
 }
 
 template<class T>
-inline TreeAVL<T>::Node<T>* TreeAVL<T>::InsertF(Node<T>* p, int k, T value)
+inline TreeAVL<T>::Node<T>* TreeAVL<T>::InsertPrivate(Node<T>* Unit, int Key, T Value)
 {
-	if (!p) return new Node<T>(k, value);
-	if (k < p->key)
-		p->left = InsertF(p->left, k, value);
+	if (!Unit)
+		return (new Node<T>(Key, Value));
+
+	if (Key < Unit->key)
+		Unit->left = InsertPrivate(Unit->left, Key, Value);
+	else if (Key > Unit->key)
+		Unit->right = InsertPrivate(Unit->right, Key, Value);
 	else
-		p->right = InsertF(p->right, k, value);
-	return Balance(p);
+		exit(666666);
+
+	return (Balance(Unit));
 }
 
 template<class T>
 inline void TreeAVL<T>::Insert(int Key, T Value)
 {
-	 m_head = TreeAVL<T>::InsertF(m_head, Key, Value);
+	m_head = TreeAVL<T>::InsertPrivate(m_head, Key, Value);
 }
 
 template<class T>
-inline void TreeAVL<T>::PrintF(Node<T>* Unit)
+inline void TreeAVL<T>::PrintPrivate(Node<T>* Unit)
 {
-	if (Unit)
-		cout << "\n" << Unit->key << ") ";
-	else
+	if (!Unit)
 		return;
+	cout << "\n\n\n[" << Unit->key << "]" << Unit->value;
+	cout << "\n|\t\\\n";
+	if (!Unit->left)
+		cout << "[null]";
+	else
+		cout << "[" << Unit->left->key << "]" << Unit->left->value;
+	if (!Unit->right)
+		cout << "\t[null]";
+	else
+		cout << "\t[" << Unit->right->key << "]" << Unit->right->value;
 
-	if (Unit->left)
-		cout << Unit->left->key;
-	if (Unit->right)
-		cout << " | " << Unit->right->key << "\n";
-
-	PrintF(Unit->right);
-	PrintF(Unit->left);
+	PrintPrivate(Unit->right);
+	PrintPrivate(Unit->left);
 }
 
 template<class T>
 inline void TreeAVL<T>::Print()
 {
-	Node<T> *demo = m_head;
-	TreeAVL<T>::PrintF(demo);
+	Node<T>* demo = m_head;
+	TreeAVL<T>::PrintPrivate(demo);
 }
+
