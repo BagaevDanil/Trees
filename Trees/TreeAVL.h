@@ -31,11 +31,12 @@ private:
 	unsigned int GetHeight(Node<T>* Unit);
 	int GetBalanceFactor(Node<T>* p);
 	void FixHeight(Node<T>* p);
-	Node<T>* RotateRight(Node<T>* p); // правый поворот вокруг Unit
-	Node<T>* RotateLeft(Node<T>* q); // левый поворот вокруг Unit
+	Node<T>* RotateRight(Node<T>* p);
+	Node<T>* RotateLeft(Node<T>* q);
 	Node<T>* Balance(Node<T>* p);
-	Node<T>* InsertPrivate(Node<T>* Unit, int Key, T Value); // вставка ключа k в дерево с корнем p
-	void PrintPrivate(Node<T>* Unit);
+	Node<T>* InsertPrivate(Node<T>* Unit, int Key, T Value);
+	void PrintTreePrivate(Node<T>* Unit);
+	Node<T>* PrintPrivate(Node<T>* Unit);
 
 	Node<T>* FindMin(Node<T>* p);
 	Node<T>* RemoveMin(Node<T>* p);
@@ -46,6 +47,7 @@ public:
 	TreeAVL();
 	void Insert(int Key, T Value);
 	void Remove(int k);
+	void PrintTree();
 	void Print();
 };
 
@@ -110,7 +112,7 @@ inline TreeAVL<T>::Node<T>* TreeAVL<T>::RotateLeft(Node<T>* Unit)
 template<class T>
 inline TreeAVL<T>::Node<T>* TreeAVL<T>::Balance(Node<T>* Unit)
 {
-	FixHeight(Unit); //Удалить, после доказательства безполезности (-)
+	FixHeight(Unit); //--
 	int BalanceFactor = GetBalanceFactor(Unit);
 
 	if (BalanceFactor == 2) //RotateLeft
@@ -151,7 +153,7 @@ inline void TreeAVL<T>::Insert(int Key, T Value)
 }
 
 template<class T>
-inline void TreeAVL<T>::PrintPrivate(Node<T>* Unit)
+inline void TreeAVL<T>::PrintTreePrivate(Node<T>* Unit)
 {
 	if (!Unit)
 		return;
@@ -166,15 +168,15 @@ inline void TreeAVL<T>::PrintPrivate(Node<T>* Unit)
 	else
 		cout << "\t[" << Unit->right->key << "]" << Unit->right->value;
 
-	PrintPrivate(Unit->right);
-	PrintPrivate(Unit->left);
+	PrintTreePrivate(Unit->right);
+	PrintTreePrivate(Unit->left);
 }
 
 template<class T>
-inline void TreeAVL<T>::Print()
+inline void TreeAVL<T>::PrintTree()
 {
 	Node<T>* demo = m_head;
-	TreeAVL<T>::PrintPrivate(demo);
+	TreeAVL<T>::PrintTreePrivate(demo);
 }
 
 template<class T>
@@ -196,7 +198,8 @@ inline TreeAVL<T>::Node<T>* TreeAVL<T>::RemoveMin(Node<T>* Unit)
 template<class T>
 inline TreeAVL<T>::Node<T>* TreeAVL<T>::RemovePrivate(Node<T>* Unit, int Key)
 {
-	if (!Unit) return 0;
+	if (!Unit)
+		exit(666666);
 
 	if (Key < Unit->key)
 		Unit->left = RemovePrivate(Unit->left, Key);
@@ -222,4 +225,30 @@ template<class T>
 inline void TreeAVL<T>::Remove(int Key)
 {
 	m_head = RemovePrivate(m_head, Key);
+}
+
+template<class T>
+inline void TreeAVL<T>::Print()
+{
+	Node<T> *demo = m_head;
+	PrintPrivate(demo);
+}
+
+template<class T>
+inline TreeAVL<T>::Node<T>* TreeAVL<T>::PrintPrivate(Node<T>* Unit)
+{
+	if (Unit == 0)
+		return Unit;
+
+	//cout << "[" << Unit->key << "] " << Unit->value << " "; 
+
+	Unit->left = PrintPrivate(Unit->left);
+	//if (Unit->left)
+		//cout << "[" << Unit->left->key << "] " << Unit->left->value << " ";
+	cout << "[" << Unit->key << "]=>" << Unit->value << "  ";
+	Unit->right = PrintPrivate(Unit->right);
+	//if (Unit->right)
+		//cout << "[" << Unit->right->key << "] " << Unit->right->value << " ";
+	
+	return(Unit);
 }
