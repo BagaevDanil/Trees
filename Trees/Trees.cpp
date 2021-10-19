@@ -51,16 +51,4 @@ void checkAVL()
 int main()
 {
 	checkAVL();
-	//TreeAVL<int> a;
-	//a.Insert(5, 45);
-	//a.Insert(7, 5776);
-	//a.Insert(1, 5);
-	//a.Insert(4, 56);
-	//a.Insert(11, 234);
-	//a.Insert(12, 15);
-	//a.Insert(29, 156);
-	//
-	//a.Remove(11);
-
-	//a.Print();
 }
