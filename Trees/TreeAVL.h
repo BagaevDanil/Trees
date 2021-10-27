@@ -23,7 +23,7 @@ private:
 			this->key = Key;
 			this->value = Value;
 			left = right = nullptr;
-			height = 1;
+			height = 0;
 		}
 	};
 
