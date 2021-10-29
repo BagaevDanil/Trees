@@ -124,7 +124,7 @@ inline TreeAVL<T>::Node<T>* TreeAVL<T>::Balance(Node<T>* Unit)
 	else if (BalanceFactor == -2) //RotateRight
 	{
 		if (GetBalanceFactor(Unit->left) > 0) //BigRotateRight
-			Unit->left = RotateRight(Unit->left);
+			Unit->left = RotateLeft(Unit->left);
 		Unit = RotateRight(Unit);
 	}
 	return Unit;
