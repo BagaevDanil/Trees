@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "MyList.h"
 using namespace std;
 
 template <class T>
@@ -22,6 +23,12 @@ private:
 		{
 			this->key = Key;
 			this->value = Value;
+			left = right = nullptr;
+			height = 1;
+		}
+
+		Node()
+		{
 			left = right = nullptr;
 			height = 1;
 		}
@@ -49,6 +56,10 @@ public:
 	void Remove(int k);
 	void PrintTree();
 	void Print();
+
+	void PrintKLP();
+	void PrintLKP();
+	void PrintLPK();
 };
 
 //-------------------------------------------------------------------------------\\
@@ -251,4 +262,84 @@ inline TreeAVL<T>::Node<T>* TreeAVL<T>::PrintPrivate(Node<T>* Unit)
 		//cout << "[" << Unit->right->key << "] " << Unit->right->value << " ";
 	
 	return(Unit);
+}
+
+template<class T>
+inline void TreeAVL<T>::PrintKLP()
+{
+	MyList<Node<T>> queue;
+	queue.AddFront(*m_head);
+
+	while (queue.GetSizeList() > 0)
+	{
+		Node<T> Unit = queue.GetFront();
+		queue.DeleteFront();
+		cout << "[" << Unit.key << "]=>" << Unit.value << "  ";
+		if (Unit.right)
+			queue.AddFront(*Unit.right);
+		if (Unit.left)
+			queue.AddFront(*Unit.left);	
+	}
+}
+
+template<class T>
+inline void TreeAVL<T>::PrintLKP()
+{
+	MyList<Node<T>> queue;
+	queue.AddFront(*m_head);
+
+	while (queue.GetSizeList() > 0)
+	{
+		Node<T> Unit = queue.GetFront();
+		
+		if (Unit.left)
+			queue.AddFront(*Unit.left);
+		else
+		{
+			cout << "[" << Unit.key << "]=>" << Unit.value << "  ";
+			queue.DeleteFront();
+			while (!Unit.right)
+			{
+				if (queue.GetSizeList() <= 0)
+					return;
+				Unit = queue.GetFront();
+				cout << "[" << Unit.key << "]=>" << Unit.value << "  ";
+				queue.DeleteFront();
+			}
+			queue.AddFront(*Unit.right);
+		}
+	}
+}
+
+template<class T>
+inline void TreeAVL<T>::PrintLPK()
+{
+	MyList<Node<T>> queue;
+	queue.AddFront(*m_head);
+
+	while (queue.GetSizeList() > 0)
+	{
+		Node<T> Unit = queue.GetFront();
+
+		if (Unit.left)
+			queue.AddFront(*Unit.left);
+		else
+		{
+			bool findRight = !Unit.right;
+			while (findRight)
+			{
+				cout << "[" << Unit.key << "]=>" << Unit.value << "  ";
+				Node<T> predUnit = Unit;
+				queue.DeleteFront();
+				if (queue.GetSizeList() <= 0)
+					return;
+				Unit = queue.GetFront();
+				findRight = !Unit.right;
+				if (!findRight)
+					if (Unit.right->key == predUnit.key)
+						findRight = !findRight;
+			}
+			queue.AddFront(*Unit.right);
+		}
+	}
 }

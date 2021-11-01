@@ -139,10 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="MyList.cpp" />
     <ClCompile Include="TreeAVL.cpp" />
     <ClCompile Include="Trees.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MyList.h" />
     <ClInclude Include="TreeAVL.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

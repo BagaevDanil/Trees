@@ -7,7 +7,7 @@ void checkAVL()
 	TreeAVL<int> subject;
 	
     system("cls");
-	string menuArr = "Press key from the menu\n0) Exit.............\n1) Insert...........\n2) Remove...........\n3) Print tree.......\n4) Print............\n";
+	string menuArr = "Press key from the menu\n0) Exit.............\n1) Insert...........\n2) Remove...........\n3) Print tree.......\n4) PrintKLP............\n5) PrintLKP............\n6) PrintLPK............\n";
 
 	int but = -1;
 	while (but != 0)
@@ -18,11 +18,11 @@ void checkAVL()
 
 		if (but == 1)
 		{
-			int key, value;
+			int key, value = 0;
 			cout << "Enter key: ";
 			cin >> key;
 			cout << "Enter value: ";
-			cin >> value;
+			//cin >> value;
 			subject.Insert(key, value);
 		}
 		else if (but == 2)
@@ -40,7 +40,19 @@ void checkAVL()
 		}
 		else if (but == 4)
 		{
-			subject.Print();
+			subject.PrintKLP();
+			cout << "\n\nPress any key...";
+			int cont = _getch();
+		}
+		else if (but == 5)
+		{
+			subject.PrintLKP();
+			cout << "\n\nPress any key...";
+			int cont = _getch();
+		}
+		else if (but == 6)
+		{
+			subject.PrintLPK();
 			cout << "\n\nPress any key...";
 			int cont = _getch();
 		}
